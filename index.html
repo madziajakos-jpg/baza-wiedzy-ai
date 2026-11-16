@@ -17,6 +17,7 @@
   <link rel="preload" href="fonts/LuckiestGuy-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/gen.css" />
 </head>
 <body>
   <div class="app" id="app" data-view="szukaj">
@@ -107,6 +108,11 @@
       <main class="content" id="badges"></main>
     </section>
 
+    <!-- ============ MATERIAŁY ============ -->
+    <section class="view" id="view-materialy" aria-label="Moje materiały" hidden>
+      <main class="content" id="materials"></main>
+    </section>
+
     <nav class="nav" aria-label="Menu">
       <a href="#szukaj" class="active" data-tab="szukaj">
         <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6.2" stroke="currentColor" stroke-width="2.2"/><path d="M15.3 15.3 L20 20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
@@ -120,12 +126,16 @@
         <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="10" r="6.2" stroke="currentColor" stroke-width="2"/><path d="M8.2 15.2 L7 21 l5-2.4 L17 21 l-1.2-5.8" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span>
         Odznaki
       </a>
+      <a href="#materialy" data-tab="materialy">
+        <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3.5" width="12" height="16" rx="2.5" stroke="currentColor" stroke-width="2"/><path d="M8 3.5v16" stroke="currentColor" stroke-width="2"/><path d="M19.5 6.5v13.5a1 1 0 0 1-1 1H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14.5 2.5l.8 1.7 1.8.3-1.3 1.3.3 1.8-1.6-.9-1.6.9.3-1.8-1.3-1.3 1.8-.3z" fill="currentColor"/></svg></span>
+        Materiały
+      </a>
     </nav>
 
     <!-- multi-select bar -->
     <div class="select-bar" id="selectBar" hidden>
       <span class="sb-count" id="sbCount">Wybrano 0</span>
-      <button class="btn soon" id="sbMerge" type="button">Połącz w instrukcję <em>wkrótce</em></button>
+      <button class="btn primary" id="sbMerge" type="button">✨ Połącz w instrukcję</button>
       <button class="btn" id="sbCancel" type="button">Anuluj</button>
     </div>
   </div>
@@ -180,6 +190,49 @@
       <h2 id="confirmTitle">Na pewno?</h2>
       <p id="confirmText"></p>
       <div class="dialog-actions"><button type="button" class="btn" id="confirmNo">Zostaw</button><button type="button" class="btn danger" id="confirmYes">Usuń</button></div>
+    </div>
+  </div>
+
+  <div class="overlay gen-loading" id="genLoading" hidden role="dialog" aria-modal="true" aria-live="polite">
+    <div class="gl-box">
+      <div class="gl-stage" aria-hidden="true">
+        <span class="gl-orb o1">📝</span><span class="gl-orb o2">✨</span><span class="gl-orb o3">💡</span><span class="gl-orb o4">⭐</span>
+        <svg class="gl-face" viewBox="0 0 38 38">
+          <defs><radialGradient id="glGlow" cx="40%" cy="35%"><stop offset="0%" stop-color="#ffe9b8"/><stop offset="55%" stop-color="#ffc25a"/><stop offset="100%" stop-color="#e08920"/></radialGradient></defs>
+          <circle cx="19" cy="19" r="17.5" fill="url(#glGlow)" stroke="#140c0a" stroke-width="1.5"/>
+          <g class="gl-eyes"><ellipse cx="14" cy="16.5" rx="2.2" ry="2.8" fill="#140c0a"/><ellipse cx="24" cy="16.5" rx="2.2" ry="2.8" fill="#140c0a"/>
+          <circle cx="14.8" cy="15.5" r=".9" fill="#fff"/><circle cx="24.8" cy="15.5" r=".9" fill="#fff"/></g>
+          <ellipse cx="10.5" cy="21" rx="2.3" ry="1.3" fill="#ff3dae" opacity=".55"/><ellipse cx="27.5" cy="21" rx="2.3" ry="1.3" fill="#ff3dae" opacity=".55"/>
+          <path class="gl-mouth" d="M14.5 23 Q19 27.5 23.5 23" stroke="#140c0a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="gl-kind" id="genLoadKind"></div>
+      <div class="gl-msg" id="genLoadMsg">Czytam Twoje notatki…</div>
+      <div class="gl-dots"><i></i><i></i><i></i></div>
+      <button class="btn" type="button" data-close>Anuluj</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="genView" hidden role="dialog" aria-modal="true">
+    <div class="reader-sheet">
+      <div class="reader-head">
+        <button class="icon-btn" data-close aria-label="Wróć">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M15 5 L8 12 L15 19" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <span class="reader-kicker" id="genKicker"></span>
+        <button class="btn" id="genDownload" type="button">📥 Pobierz</button>
+        <button class="btn primary" id="genSave" type="button">💾 Zapisz</button>
+      </div>
+      <article class="reader-body gen-body" id="genBody"></article>
+    </div>
+  </div>
+
+  <div class="overlay" id="genError" hidden role="alertdialog" aria-modal="true">
+    <div class="dialog small gen-err">
+      <div class="big-emoji">🙈</div>
+      <h2 id="genErrTitle">Ups</h2>
+      <p id="genErrText"></p>
+      <div class="dialog-actions"><button type="button" class="btn primary" id="genErrOk">Rozumiem</button></div>
     </div>
   </div>
 

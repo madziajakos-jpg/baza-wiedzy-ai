@@ -9,28 +9,35 @@ export function toast(msg, ms = 2400) {
 }
 
 // overlays with back-button support
-const stack = [];
+// history.back() jest asynchroniczne – nowy wpis dodajemy dopiero, gdy poprzedni „back” się zakończy.
+const stack = []; let ignorePop = 0, pendingPush = 0;
 export function openOverlay(id, onClose) {
   const o = document.getElementById(id); o.hidden = false; stack.push({ id, onClose });
-  history.pushState({ overlay: id }, '');
+  if (ignorePop > 0) pendingPush++; else history.pushState({ overlay: id }, '');
   document.body.style.overflow = 'hidden';
 }
 export function closeOverlay(fromPop = false) {
   const top = stack.pop(); if (!top) return;
   document.getElementById(top.id).hidden = true; top.onClose?.();
   if (!stack.length) document.body.style.overflow = '';
-  if (!fromPop) history.back();
+  if (fromPop) return;
+  if (pendingPush > 0) { pendingPush--; return; } // ten wpis nie zdążył trafić do historii
+  ignorePop++; history.back();
 }
-window.addEventListener('popstate', () => { if (stack.length) closeOverlay(true); });
+window.addEventListener('popstate', () => {
+  if (ignorePop > 0) { ignorePop--; if (!ignorePop) while (pendingPush > 0) { pendingPush--; history.pushState({ overlay: 1 }, ''); } return; }
+  if (stack.length) closeOverlay(true);
+});
 document.addEventListener('click', e => {
   if (e.target.closest('[data-close]')) { e.preventDefault(); closeOverlay(); return; }
   if (e.target.classList?.contains('overlay')) closeOverlay();
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && stack.length) closeOverlay(); });
 
-export function confirmDialog(title, text, yes = 'Usuń') {
+export function confirmDialog(title, text, yes = 'Usuń', no = 'Zostaw', yesClass = 'danger') {
   return new Promise(res => {
-    $('#confirmTitle').textContent = title; $('#confirmText').textContent = text; $('#confirmYes').textContent = yes;
+    $('#confirmTitle').textContent = title; $('#confirmText').textContent = text; $('#confirmYes').textContent = yes; $('#confirmNo').textContent = no;
+    $('#confirmYes').className = 'btn ' + yesClass;
     let answered = false;
     const done = v => { if (answered) return; answered = true; res(v); };
     $('#confirmYes').onclick = () => { done(true); closeOverlay(); };

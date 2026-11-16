@@ -4,7 +4,8 @@ Prywatna/publiczna PWA z notatkami Magdy z kursów AI. Statyczna strona – dzia
 
 - **Szukaj** – wyszukiwanie po znaczeniu (semantyczne) w 100% w przeglądarce, bez płatnego API: model `Xenova/multilingual-e5-small` (int8, transformers.js + onnxruntime-wasm) liczy wektor pytania w telefonie; wektory notatek są policzone wcześniej. Wynik = cosinus + lekki BM25 (hybryda). Linki z `links.json` też są przeszukiwane.
   - „Otwórz” – pełny tekst fragmentu (z podświetleniem słów z pytania), „Oryginał” – plik na Dysku / link.
-  - Przytrzymaj kartę → Czytaj + (wkrótce) Instrukcja, Lekcja, Prezentacja, Fiszki/test; „Zaznacz kilka” → (wkrótce) „Połącz w instrukcję”.
+  - Przytrzymaj kartę → Czytaj, Instrukcja, Lekcja, Prezentacja, Fiszki, Test (AI przez Cloudflare Worker, `worker/`); „Zaznacz kilka” → „Połącz w instrukcję”.
+- **Materiały** – zapisane materiały (IndexedDB), pobieranie jako samodzielny plik HTML działający offline.
 - **Pomysły** – szybkie dodawanie, suwak postępu %, pasek, usuwanie z potwierdzeniem, ukończone → sekcja „Ukończone” z pucharem, konfetti i fanfarą. Zapis: `localStorage`.
 - **Odznaki** – 8 certyfikatów w ramkach, podgląd po dotknięciu, dodawanie własnych (zdjęcie + tytuł) – zapis w IndexedDB na telefonie.
 
@@ -52,4 +53,4 @@ Uwaga: repozytorium publiczne = notatki publiczne (Magda się zgodziła). Fragme
 - Pierwsze pobranie ~113 MB modelu + 21 MB silnika wasm (jednorazowo; wyszukiwanie po słowach działa od razu, zanim model się wczyta).
 - Bez `crossOriginIsolated` (GitHub Pages nie ustawia COOP/COEP) model działa na 1 wątku – zapytanie trwa zwykle 20–150 ms, start modelu z pamięci 1–4 s.
 - Pomysły i własne odznaki są tylko na tym urządzeniu (localStorage/IndexedDB) – brak synchronizacji.
-- Generowanie (lekcje, instrukcje, fiszki) – etap 2 (proxy z kluczem OpenAI, np. Cloudflare Worker).
+- Generowanie wymaga internetu; limit 1 $/mies., 20/h – szczegóły w `../STAGE2.md` i `worker/`.

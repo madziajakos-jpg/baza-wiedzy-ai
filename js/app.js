@@ -3,6 +3,7 @@ import { state, loadData, startModel, search, tokens } from './search.js';
 import { stem } from './search-core.js';
 import { initIdeas, ideasSummary } from './ideas.js';
 import { initBadges, badgesCount } from './badges.js';
+import { generate, initMaterials, materialsCount, onMaterialsShown } from './gen.js';
 
 // ---------- helpers ----------
 const TYPES = {
@@ -25,13 +26,14 @@ const FILE_SVG = '<svg width="12" height="14" viewBox="0 0 12 14" fill="none"><p
 const LINK_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
 
 // ---------- routing ----------
-const VIEWS = ['szukaj', 'pomysly', 'odznaki'];
+const VIEWS = ['szukaj', 'pomysly', 'odznaki', 'materialy'];
 function route() {
   const v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'szukaj';
   for (const x of VIEWS) $('#view-' + x).hidden = x !== v;
   document.querySelectorAll('.nav a').forEach(a => a.classList.toggle('active', a.dataset.tab === v));
   $('#app').dataset.view = v;
   if (v !== 'szukaj') exitSelect();
+  if (v === 'materialy') onMaterialsShown();
   updateChip(); window.scrollTo(0, 0);
 }
 window.addEventListener('hashchange', route);
@@ -43,6 +45,7 @@ export function updateChip() {
   chip.classList.remove('install');
   if (v === 'pomysly') chip.textContent = ideasSummary();
   else if (v === 'odznaki') { const n = badgesCount(); chip.textContent = `${n} ${plural(n, 'sztuka', 'sztuki', 'sztuk')}`; }
+  else if (v === 'materialy') { const n = materialsCount(); chip.textContent = `${n} ${plural(n, 'sztuka', 'sztuki', 'sztuk')}`; }
   else if (installEvt) { chip.textContent = 'Zainstaluj'; chip.classList.add('install'); }
   else chip.textContent = 'PWA';
 }
@@ -167,20 +170,24 @@ function toggleSel(card) {
 }
 function updateSelBar() { const n = selected.size; $('#sbCount').textContent = `Wybrano ${n}`; }
 $('#sbCancel').addEventListener('click', exitSelect);
-$('#sbMerge').addEventListener('click', () => toast(selected.size < 2 ? 'Zaznacz co najmniej 2 karteczki 🙂' : 'Łączenie w instrukcję dojdzie w drugim etapie ✨'));
+$('#sbMerge').addEventListener('click', () => {
+  if (selected.size < 2) { toast('Zaznacz co najmniej 2 karteczki 🙂'); return; }
+  const docs = [...selected].map(id => state.docs.find(d => d.id === id)).filter(Boolean);
+  generate('instrukcja', docs);
+});
 
 // ---------- long-press sheet ----------
 function openSheet(doc) {
   $('#sheetTitle').textContent = doc.title;
-  const soon = (ico, t) => `<button class="sheet-act soon" data-soon="${t}"><span class="ico">${ico}</span><span>${t}<small>wkrótce</small></span></button>`;
+  const g = (ico, t, k, hint) => `<button class="sheet-act gen" data-g="${k}"><span class="ico">${ico}</span><span>${t}<small>${hint}</small></span></button>`;
   $('#sheetActions').innerHTML = `
     <button class="sheet-act main" data-s="read"><span class="ico">📖</span><span>Czytaj</span></button>
-    ${soon('🧭', 'Instrukcja')}${soon('🎓', 'Lekcja')}${soon('🖼️', 'Prezentacja')}${soon('🃏', 'Fiszki / test')}
-    <button class="sheet-act wide" data-s="select"><span class="ico">☑️</span><span>Zaznacz kilka i połącz</span></button>`;
+    ${g('🧭', 'Instrukcja', 'instrukcja', 'krok po kroku')}${g('🎓', 'Lekcja', 'lekcja', 'z pytaniami')}${g('🖼️', 'Prezentacja', 'prezentacja', 'slajdy')}${g('🃏', 'Fiszki', 'fiszki', 'do odwracania')}${g('✅', 'Test', 'test', 'z wynikiem')}
+    <button class="sheet-act" data-s="select"><span class="ico">☑️</span><span>Zaznacz kilka<small>i połącz</small></span></button>`;
   $('#sheetActions').onclick = e => {
     const b = e.target.closest('.sheet-act'); if (!b) return;
-    if (b.dataset.soon) { toast(`${b.dataset.soon} — dojdzie w drugim etapie ✨`); return; }
     closeOverlay();
+    if (b.dataset.g) { setTimeout(() => generate(b.dataset.g, [doc]), 60); return; }
     if (b.dataset.s === 'read') setTimeout(() => openReader(doc), 50);
     if (b.dataset.s === 'select') enterSelect(doc.id);
   };
@@ -231,9 +238,10 @@ function openReader(doc) {
     </div>
     <div class="r-actions">
       ${doc.url ? `<a class="btn primary" href="${esc(doc.url)}" target="_blank" rel="noopener">${isLink ? 'Otwórz link' : 'Otwórz oryginał'}</a>` : ''}
-      <button class="btn soon" data-soon>Zrób z tego lekcję <em>wkrótce</em></button>
+      <button class="btn" data-gen="lekcja">🎓 Zrób z tego lekcję</button>
+      <button class="btn" data-gen="fiszki">🃏 Fiszki</button>
     </div>`;
-  $('#readerBody').querySelector('[data-soon]').onclick = () => toast('Lekcje dojdą w drugim etapie ✨');
+  $('#readerBody').querySelectorAll('[data-gen]').forEach(b => b.onclick = () => { closeOverlay(); setTimeout(() => generate(b.dataset.gen, [doc]), 60); });
   openOverlay('reader');
   $('#reader .reader-sheet').scrollTop = 0;
 }
@@ -269,6 +277,7 @@ async function boot() {
   route();
   initIdeas(updateChip);
   initBadges(updateChip);
+  initMaterials(updateChip);
   try {
     await loadData();
   } catch (e) {

@@ -1,11 +1,11 @@
 // Service worker: offline dla aplikacji. Model (models/) cache'uje sam worker wyszukiwarki (Cache "baza-model-v1").
-const VERSION = 'v1-202611160654';
+const VERSION = 'v2-202611160811';
 const SHELL = 'baza-shell-' + VERSION;
 const RUNTIME = 'baza-runtime-' + VERSION;
 const PRECACHE = [
   './', 'index.html', 'manifest.webmanifest',
-  'css/base.css', 'css/app.css',
-  'js/app.js', 'js/ui.js', 'js/search.js', 'js/search-core.js', 'js/ideas.js', 'js/badges.js', 'js/embed-worker.js',
+  'css/base.css', 'css/app.css', 'css/gen.css',
+  'js/app.js', 'js/ui.js', 'js/search.js', 'js/search-core.js', 'js/ideas.js', 'js/badges.js', 'js/embed-worker.js', 'js/gen.js', 'js/render.js', 'js/config.js',
   'data/meta.json', 'data/docs.json', 'data/emb.bin',
   'fonts/Baloo2.woff2', 'fonts/Nunito.woff2', 'fonts/Nunito-Italic.woff2', 'fonts/LuckiestGuy-Regular.woff2', 'fonts/PatrickHand-Regular.woff2', 'fonts/Bangers-Regular.woff2',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png', 'icons/maskable-512.png',

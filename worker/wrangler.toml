@@ -1,0 +1,14 @@
+name = "baza-wiedzy-ai"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+workers_dev = true
+
+[vars]
+MODEL = "gpt-4.1-mini"
+MONTHLY_BUDGET_USD = "1.00"
+
+# KV na licznik wydatków i limit zapytań (id uzupełnione po `wrangler kv namespace create BUDGET`)
+[[kv_namespaces]]
+binding = "BUDGET"
+id = "REPLACE_WITH_KV_ID"
+preview_id = "REPLACE_WITH_KV_ID"
