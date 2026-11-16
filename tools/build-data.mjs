@@ -48,10 +48,14 @@ for (const l of links) {
   const ctx = strip(l.context && l.context !== l.url ? l.context : '');
   const title = strip(l.title);
   const what = strip(l.what || '');
+  const tags = [];
+  if (l.category) tags.push(l.category);
+  for (const t of (l.lists || [])) if (t && !tags.includes(t)) tags.push(t);
+  const listLine = (l.lists || []).map(x => 'Z listy: ' + x).join('\n');
   docs.push({
     id: l.id, k: 'l', title, summary: ctx || (what ? what : `Strona ${l.domain}`),
-    text: [what, ctx, l.section ? 'Znaleziony w: ' + l.section : ''].filter(Boolean).join('\n'), type: 'link',
-    tags: l.category ? [l.category] : [], src: l.source_file, url: l.url, section: l.section || '',
+    text: [what, ctx, listLine, l.section ? 'Znaleziony w: ' + l.section : ''].filter(Boolean).join('\n'), type: 'link',
+    tags, src: l.source_file, url: l.url, section: l.section || '',
     docUrl: l.webViewLink, domain: l.domain, what, also: [],
   });
 }

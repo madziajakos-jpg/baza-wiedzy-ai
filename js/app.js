@@ -69,7 +69,7 @@ function cardHTML(r, n) {
     <div class="kicker"><span class="pill ${cls}">${esc(label)}</span>${what ? `<span class="what-badge">${esc(what)}</span>` : ''}</div>
     <h2>${esc(title)}</h2>
     <p class="snippet">${esc(summary)}</p>
-    ${d.tags?.length ? `<div class="tags">${d.tags.map(t => `<span class="tag">#${esc(t)}</span>`).join('')}</div>` : ''}
+    ${d.tags?.length ? `<div class="tags">${d.tags.map(t => `<button type="button" class="tag" data-q="${esc(t)}">#${esc(t)}</button>`).join('')}</div>` : ''}
     <div class="foot">
       <div class="source">${isLink ? LINK_SVG : FILE_SVG}<span>${esc(isLink ? (d.domain || '') + ' · z: ' + d.src : d.src)}</span></div>
       <div class="actions">
@@ -140,9 +140,20 @@ qEl.addEventListener('input', () => { clearTimeout(deb); deb = setTimeout(() => 
 $('#searchForm').addEventListener('submit', e => { e.preventDefault(); clearTimeout(deb); qEl.blur(); runSearch(qEl.value); });
 $('#clearQ').addEventListener('click', () => { qEl.value = ''; runSearch(''); qEl.focus(); });
 
+function searchByTag(t) {
+  if (!t) return;
+  exitSelect();
+  closeOverlay();
+  if (location.hash && location.hash !== '#szukaj') location.hash = 'szukaj';
+  qEl.value = t;
+  runSearch(t);
+  window.scrollTo(0, 0);
+}
 res.addEventListener('click', e => {
   const chip = e.target.closest('.hint-chip');
   if (chip) { qEl.value = chip.dataset.q; runSearch(chip.dataset.q); return; }
+  const tag = e.target.closest('.tag[data-q]');
+  if (tag) { e.preventDefault(); e.stopPropagation(); searchByTag(tag.dataset.q); return; }
   const card = e.target.closest('.card'); if (!card) return;
   const doc = state.docs.find(d => d.id === card.dataset.id);
   if (selectMode) { if (e.target.closest('a')) return; e.preventDefault(); toggleSel(card); return; }
@@ -232,7 +243,7 @@ function openReader(doc) {
     <span class="pill ${cls}" style="font-family:'Baloo 2';font-weight:700;font-size:11px;color:#fff;border-radius:99px;padding:2px 8px 1px">${esc(label)}</span>${what ? `<span class="what-badge">${esc(what)}</span>` : ''}
     <h1 id="readerTitle">${esc(title)}</h1>
     ${doc.section && doc.section.trim() !== title.trim() ? `<div class="crumbs">${esc(doc.section)}</div>` : ''}
-    ${doc.tags?.length ? `<div class="tags">${doc.tags.map(t => `<span class="tag">#${esc(t)}</span>`).join('')}</div>` : ''}
+    ${doc.tags?.length ? `<div class="tags">${doc.tags.map(t => `<button type="button" class="tag" data-q="${esc(t)}">#${esc(t)}</button>`).join('')}</div>` : ''}
     <div class="txt">${formatText(stripUrls(doc.text || doc.summary || ''), lastQuery)}</div>
     <div class="src">Źródło: ${doc.url && !isLink ? `<a href="${esc(doc.url)}" target="_blank" rel="noopener">${esc(doc.src)}</a>` : esc(doc.src)}
       ${isLink && doc.docUrl ? `<br>Link znaleziony w: <a href="${esc(doc.docUrl)}" target="_blank" rel="noopener">${esc(doc.src)}</a>` : ''}
@@ -293,6 +304,10 @@ async function boot() {
   bootModel();
   navigator.storage?.persist?.().catch(() => {});
 }
+$('#readerBody')?.addEventListener('click', e => {
+  const tag = e.target.closest('.tag[data-q]');
+  if (tag) { e.preventDefault(); searchByTag(tag.dataset.q); }
+});
 boot();
 
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {

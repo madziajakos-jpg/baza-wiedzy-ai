@@ -8,12 +8,16 @@ export function stem(w) {
   if (w.length > 5) for (const s of SUFFIXES) { if (w.endsWith(s) && w.length - s.length >= 4) { w = w.slice(0, -s.length); break; } }
   return w.length > 7 ? w.slice(0, 7) : w;
 }
+const ALIASES = { kursy: ['kurs'], kursami: ['kurs'], kursow: ['kurs'] };
 export function tokens(s) {
   const out = [];
   for (const m of (s || '').toLowerCase().matchAll(/[\p{L}\p{N}]+/gu)) {
     const w = m[0];
     if (w.length < 2 || STOP.has(w) || STOP.has(fold(w))) continue;
-    out.push(stem(w));
+    const st = stem(w);
+    const al = ALIASES[fold(w)] || ALIASES[st];
+    if (al) { for (const a of al) if (!out.includes(a)) out.push(a); }
+    else out.push(st);
   }
   return out;
 }
@@ -23,7 +27,7 @@ export function buildBM25(docs) {
   for (const d of docs) {
     const tf = new Map();
     const add = (txt, w) => { for (const t of tokens(txt)) tf.set(t, (tf.get(t) || 0) + w); };
-    add(d.title, 3); add(d.what || '', 2); add((d.tags || []).join(' '), 2); add(d.summary, 1); add(d.text, 1); add(d.src, 1);
+    add(d.title, 3); add(d.what || '', 2); add((d.tags || []).join(' '), 3); add(d.summary, 1); add(d.text, 1); add(d.src, 1);
     let len = 0; for (const v of tf.values()) len += v;
     tfs.push(tf); lens.push(len);
     for (const t of tf.keys()) df.set(t, (df.get(t) || 0) + 1);
@@ -48,7 +52,7 @@ export function bm25Scores(idx, query) {
     }
   }
   if (idfSum > 0) for (let i = 0; i < idx.N; i++) cov[i] /= idfSum;
-  return { scores: out, cov, qTerms: q.length };
+  return { scores: out, cov, qTerms: q.length, q, query };
 }
 
 // emb.bin: Float32 scales[N] + Int8 [N*dim]
@@ -75,9 +79,20 @@ export function hybrid(docs, cos, bm, opts = {}) {
   for (let i = 0; i < docs.length; i++) {
     const b = maxBm > 0 ? bm.scores[i] / maxBm : 0;
     const c = cos ? cos[i] : 0, cv = bm.cov[i];
-    const score = (cos ? c : 0) + wBm * b + wCov * cv + (docs[i].k === 'l' ? -0.01 : 0);
-    res.push({ i, score, cos: c, bm: b, cov: cv });
+    const qTok = bm.q || [];
+    const qf = fold(bm.query || '');
+    let tagBoost = 0;
+    for (const t of (docs[i].tags || [])) {
+      const tf = fold(t);
+      if (!tf) continue;
+      if (qf === tf || (qf.length >= 5 && (tf.includes(qf) || qf.includes(tf)))) tagBoost = Math.max(tagBoost, 0.12);
+    }
+    const tagsFold = (docs[i].tags || []).map(t => fold(t));
+    if (qTok.includes('kurs') && qTok.every(t => t === 'kurs' || t === 'zwiazan') && tagsFold.includes('zwiazane z kursami'))
+      tagBoost = Math.max(tagBoost, 0.10);
+    const score = (cos ? c : 0) + wBm * b + wCov * cv + (docs[i].k === 'l' ? -0.01 : 0) + tagBoost;
+    res.push({ i, score, cos: c, bm: b, cov: cv, tagBoost });
   }
   res.sort((a, b) => b.score - a.score);
-  return res.filter(r => r.cov >= minCov || (cos && r.cos >= strongCos)).slice(0, k);
+  return res.filter(r => r.cov >= minCov || r.tagBoost >= 0.10 || (cos && r.cos >= strongCos)).slice(0, k);
 }

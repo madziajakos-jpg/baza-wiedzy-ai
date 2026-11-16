@@ -58,7 +58,8 @@ a { color: inherit; }
 .card h2 { font-size: 16.5px; }
 .card .snippet { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .card .tags { display: flex; flex-wrap: wrap; gap: 4px; margin: -2px 0 8px; }
-.card .tag { font-family: "Baloo 2", sans-serif; font-weight: 600; font-size: 10.5px; line-height: 1.2; color: #5a463a; background: #f1e1c8; border-radius: 999px; padding: 2px 7px 1px; }
+.card .tag { font-family: "Baloo 2", sans-serif; font-weight: 600; font-size: 10.5px; line-height: 1.2; color: #5a463a; background: #f1e1c8; border-radius: 999px; padding: 2px 7px 1px; cursor: pointer; border: 0; }
+.card .tag:active, .reader-body .tag:active { transform: scale(.97); }
 .card .kicker .rel { margin-left: auto; font-family: "Patrick Hand", cursive; font-size: 12px; color: var(--muted); }
 .card .what-badge, .reader-body .what-badge {
   font-family: "Baloo 2", sans-serif;
@@ -147,7 +148,7 @@ a { color: inherit; }
 .reader-body h1 { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 21px; line-height: 1.2; margin: 6px 0 6px; }
 .reader-body .crumbs { font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 10px; line-height: 1.35; }
 .reader-body .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
-.reader-body .tag { font-family: "Baloo 2", sans-serif; font-weight: 600; font-size: 11px; color: #5a463a; background: #f1e1c8; border-radius: 999px; padding: 2px 8px 1px; }
+.reader-body .tag { font-family: "Baloo 2", sans-serif; font-weight: 600; font-size: 11px; color: #5a463a; background: #f1e1c8; border-radius: 999px; padding: 2px 8px 1px; cursor: pointer; border: 0; }
 .reader-body .txt { font-size: 15.5px; line-height: 1.6; font-weight: 600; color: var(--ink-soft); }
 .reader-body .txt p { margin: 0 0 10px; }
 .reader-body .txt h3 { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 16.5px; color: var(--ink); margin: 16px 0 6px; padding-left: 9px; border-left: 4px solid var(--magenta); }
