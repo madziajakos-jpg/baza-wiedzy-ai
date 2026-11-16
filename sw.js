@@ -1,5 +1,5 @@
 // Service worker: offline dla aplikacji. Model (models/) cache'uje sam worker wyszukiwarki (Cache "baza-model-v1").
-const VERSION = 'v2-202611160811';
+const VERSION = 'v1-202611161911';
 const SHELL = 'baza-shell-' + VERSION;
 const RUNTIME = 'baza-runtime-' + VERSION;
 const PRECACHE = [
