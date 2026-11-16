@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#160e0c" />
+  <meta name="description" content="Baza wiedzy AI – notatki Magdy z kursów, wyszukiwarka po znaczeniu, pomysły i odznaki." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Baza AI" />
+  <title>Baza wiedzy AI</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="preload" href="fonts/Baloo2.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/Nunito.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/LuckiestGuy-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="app" id="app" data-view="szukaj">
+    <svg class="light-cord" viewBox="0 0 390 28" preserveAspectRatio="none" fill="none" aria-hidden="true">
+      <path d="M0 10 C 30 22, 50 4, 80 12 S 130 22, 160 10 S 220 4, 250 14 S 310 22, 340 8 S 375 16, 390 10" stroke="#3a2a18" stroke-width="1.6"/>
+    </svg>
+    <div class="bulbs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+    <div class="deco" aria-hidden="true">
+      <svg class="splatter s1" viewBox="0 0 140 140">
+        <circle cx="50" cy="60" r="28" fill="#ff3dae"/><circle cx="78" cy="48" r="16" fill="#3cefff"/>
+        <circle cx="40" cy="88" r="10" fill="#c6ff3a"/><circle cx="92" cy="80" r="7" fill="#ff3dae"/>
+        <circle cx="30" cy="40" r="6" fill="#3cefff"/><circle cx="18" cy="70" r="4" fill="#c6ff3a"/>
+      </svg>
+      <svg class="splatter s2" viewBox="0 0 160 160">
+        <circle cx="100" cy="70" r="36" fill="#3cefff"/><circle cx="70" cy="100" r="20" fill="#c6ff3a"/><circle cx="120" cy="110" r="12" fill="#ff3dae"/>
+      </svg>
+      <svg class="plant" viewBox="0 0 90 150">
+        <path d="M48 0 C48 20, 52 30, 46 48 C42 62, 58 70, 50 90 C46 102, 40 110, 44 128" stroke="#2a1c12" stroke-width="2" fill="none"/>
+        <path d="M46 48 C28 44, 18 58, 30 68 C42 76, 52 62, 46 48Z" fill="#2f6b3a" stroke="#140c0a" stroke-width="1.6"/>
+        <path d="M50 70 C66 62, 82 74, 70 86 C58 96, 46 80, 50 70Z" fill="#3f8a48" stroke="#140c0a" stroke-width="1.6"/>
+        <path d="M50 90 C36 88, 26 104, 40 112 C52 118, 58 100, 50 90Z" fill="#246332" stroke="#140c0a" stroke-width="1.6"/>
+        <path d="M44 118 C54 114, 70 126, 58 136 C46 144, 38 126, 44 118Z" fill="#3f8a48" stroke="#140c0a" stroke-width="1.6"/>
+      </svg>
+      <svg class="plant-left" viewBox="0 0 80 130">
+        <path d="M40 0 C40 30, 30 50, 38 80 C42 98, 28 110, 34 130" stroke="#2a1c12" stroke-width="2" fill="none"/>
+        <path d="M38 50 C22 48, 12 64, 26 72 C38 78, 46 58, 38 50Z" fill="#2f6b3a" stroke="#140c0a" stroke-width="1.6"/>
+        <path d="M38 80 C54 74, 68 88, 54 98 C42 106, 30 88, 38 80Z" fill="#3f8a48" stroke="#140c0a" stroke-width="1.6"/>
+      </svg>
+      <svg class="star-stickers" viewBox="0 0 24 24">
+        <polygon points="12,1 15,8 22,9 17,14 18,21 12,17.5 6,21 7,14 2,9 9,8" fill="#c6ff3a" stroke="#140c0a" stroke-width="1.4" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <div class="top">
+      <div class="logo">
+        <svg class="logo-mark" viewBox="0 0 38 38" aria-hidden="true">
+          <defs><radialGradient id="lampGlow" cx="40%" cy="35%"><stop offset="0%" stop-color="#ffe9b8"/><stop offset="55%" stop-color="#ffc25a"/><stop offset="100%" stop-color="#e08920"/></radialGradient></defs>
+          <circle cx="19" cy="19" r="17.5" fill="url(#lampGlow)" stroke="#140c0a" stroke-width="1.5"/>
+          <path d="M10 24 L10 15 Q19 9 28 15 L28 24 Z" fill="#fff7eb" stroke="#140c0a" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M19 11 V24" stroke="#140c0a" stroke-width="1.4"/><path d="M10 24 H28" stroke="#140c0a" stroke-width="1.6"/>
+          <path d="M12 24 Q19 30 26 24" fill="#ff3dae" stroke="#140c0a" stroke-width="1.4"/>
+          <circle cx="28.5" cy="10" r="3.2" fill="#3cefff" stroke="#140c0a" stroke-width="1.3"/>
+        </svg>
+        <div class="wordmark">
+          <div class="brand">Baza wiedzy <span class="ai">AI</span></div>
+          <div class="tag">twoje notatki, pod ręką</div>
+        </div>
+      </div>
+      <button class="sticker-chip" id="topChip" type="button">PWA</button>
+    </div>
+
+    <!-- ============ SZUKAJ ============ -->
+    <section class="view" id="view-szukaj" aria-label="Szukaj">
+      <div class="search-wrap">
+        <form class="search-bar" role="search" id="searchForm" autocomplete="off">
+          <svg class="search-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="#1a130f" stroke-width="2.3"/><path d="M15.5 15.5 L20.5 20.5" stroke="#1a130f" stroke-width="2.3" stroke-linecap="round"/></svg>
+          <input class="q" id="q" type="search" enterkeyhint="search" placeholder="Czego dziś szukasz?" aria-label="Szukaj w notatkach" />
+          <button type="button" class="clear-btn" id="clearQ" aria-label="Wyczyść" hidden>
+            <svg class="clear-ico" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#1a130f" stroke-width="1.8"/><path d="M8.5 8.5 L15.5 15.5 M15.5 8.5 L8.5 15.5" stroke="#1a130f" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </form>
+        <div class="model-status" id="modelStatus" hidden>
+          <div class="ms-row"><span class="ms-dot"></span><span class="ms-text" id="msText">Budzę wyszukiwarkę…</span><span class="ms-pct" id="msPct"></span></div>
+          <div class="ms-bar"><i id="msBar"></i></div>
+        </div>
+      </div>
+      <main class="content" id="results" aria-live="polite"></main>
+    </section>
+
+    <!-- ============ POMYSŁY ============ -->
+    <section class="view" id="view-pomysly" aria-label="Pomysły" hidden>
+      <main class="content">
+        <div class="page-title"><h1>Pomysły</h1><span class="sub">małe kroki, wielkie fanfary</span></div>
+        <form class="idea-add" id="ideaForm" autocomplete="off">
+          <input id="ideaInput" type="text" maxlength="140" placeholder="Nowy pomysł… np. zrobić quiz o agentach" aria-label="Nowy pomysł" />
+          <button type="submit" class="btn primary big" aria-label="Dodaj pomysł">+ Dodaj</button>
+        </form>
+        <div id="ideasActive"></div>
+        <div class="section-label done-label" id="doneLabel" hidden><span>🏆 Ukończone</span><span class="bar"></span><span class="done-count" id="doneCount"></span></div>
+        <div id="ideasDone"></div>
+      </main>
+    </section>
+
+    <!-- ============ ODZNAKI ============ -->
+    <section class="view" id="view-odznaki" aria-label="Odznaki" hidden>
+      <main class="content" id="badges"></main>
+    </section>
+
+    <nav class="nav" aria-label="Menu">
+      <a href="#szukaj" class="active" data-tab="szukaj">
+        <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6.2" stroke="currentColor" stroke-width="2.2"/><path d="M15.3 15.3 L20 20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+        Szukaj
+      </a>
+      <a href="#pomysly" data-tab="pomysly">
+        <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18h6 M10 21h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 3a6.2 6.2 0 0 1 3.8 11.1c-.7.6-1.1 1.3-1.2 2.1H9.4c-.1-.8-.5-1.5-1.2-2.1A6.2 6.2 0 0 1 12 3z" stroke="currentColor" stroke-width="2"/></svg></span>
+        Pomysły
+      </a>
+      <a href="#odznaki" data-tab="odznaki">
+        <span class="nav-ico"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="10" r="6.2" stroke="currentColor" stroke-width="2"/><path d="M8.2 15.2 L7 21 l5-2.4 L17 21 l-1.2-5.8" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span>
+        Odznaki
+      </a>
+    </nav>
+
+    <!-- multi-select bar -->
+    <div class="select-bar" id="selectBar" hidden>
+      <span class="sb-count" id="sbCount">Wybrano 0</span>
+      <button class="btn soon" id="sbMerge" type="button">Połącz w instrukcję <em>wkrótce</em></button>
+      <button class="btn" id="sbCancel" type="button">Anuluj</button>
+    </div>
+  </div>
+
+  <!-- overlays -->
+  <div class="overlay" id="reader" hidden role="dialog" aria-modal="true" aria-labelledby="readerTitle">
+    <div class="reader-sheet">
+      <div class="reader-head">
+        <button class="icon-btn" data-close aria-label="Wróć">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M15 5 L8 12 L15 19" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <span class="reader-kicker" id="readerKicker"></span>
+        <a class="btn" id="readerOrig" target="_blank" rel="noopener">Oryginał</a>
+      </div>
+      <article class="reader-body" id="readerBody"></article>
+    </div>
+  </div>
+
+  <div class="overlay sheet-overlay" id="sheet" hidden role="dialog" aria-modal="true">
+    <div class="sheet">
+      <div class="sheet-grip"></div>
+      <div class="sheet-title" id="sheetTitle"></div>
+      <div class="sheet-actions" id="sheetActions"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="lightbox" hidden role="dialog" aria-modal="true">
+    <div class="lightbox">
+      <button class="icon-btn lb-close" data-close aria-label="Zamknij"><svg viewBox="0 0 24 24" fill="none"><path d="M6 6 L18 18 M18 6 L6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
+      <div class="lb-frame"><img id="lbImg" alt="" /></div>
+      <div class="lb-cap" id="lbCap"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="addBadge" hidden role="dialog" aria-modal="true">
+    <form class="dialog" id="addBadgeForm">
+      <h2>Nowa odznaka 🎉</h2>
+      <label class="file-drop" id="fileDrop">
+        <input type="file" id="badgeFile" accept="image/*" required />
+        <img id="badgePreview" alt="" hidden />
+        <span id="fileHint">Dotknij, żeby wybrać zdjęcie</span>
+      </label>
+      <label class="fld">Tytuł<input type="text" id="badgeTitle" maxlength="90" required placeholder="np. Prompt Engineering" /></label>
+      <label class="fld">Kto wydał <small>(opcjonalnie)</small><input type="text" id="badgeIssuer" maxlength="60" placeholder="np. Coursera" /></label>
+      <label class="fld">Data <small>(opcjonalnie)</small><input type="date" id="badgeDate" /></label>
+      <div class="dialog-actions"><button type="button" class="btn" data-close>Anuluj</button><button type="submit" class="btn primary">Zapisz na ścianie</button></div>
+    </form>
+  </div>
+
+  <div class="overlay" id="confirm" hidden role="alertdialog" aria-modal="true">
+    <div class="dialog small">
+      <h2 id="confirmTitle">Na pewno?</h2>
+      <p id="confirmText"></p>
+      <div class="dialog-actions"><button type="button" class="btn" id="confirmNo">Zostaw</button><button type="button" class="btn danger" id="confirmYes">Usuń</button></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

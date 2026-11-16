@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="30%" r="80%"><stop offset="0" stop-color="#3a2216"/><stop offset=".6" stop-color="#1c1210"/><stop offset="1" stop-color="#0e0908"/></radialGradient>
+    <radialGradient id="lamp" cx="40%" cy="35%"><stop offset="0" stop-color="#ffe9b8"/><stop offset=".55" stop-color="#ffc25a"/><stop offset="1" stop-color="#e08920"/></radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%"><stop offset="0" stop-color="#ffc25a" stop-opacity=".55"/><stop offset="1" stop-color="#ffc25a" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <circle cx="110" cy="120" r="60" fill="#ff3dae" opacity=".25"/><circle cx="420" cy="400" r="70" fill="#3cefff" opacity=".18"/><circle cx="410" cy="110" r="26" fill="#c6ff3a" opacity=".3"/>
+  <path d="M30 70 C 110 110, 160 40, 256 70 S 400 110, 482 66" stroke="#3a2a18" stroke-width="5" fill="none"/>
+  <g><circle cx="90" cy="88" r="9" fill="#ffe2a0"/><circle cx="180" cy="70" r="9" fill="#ffb8e2"/><circle cx="330" cy="82" r="9" fill="#b8f6ff"/><circle cx="430" cy="78" r="9" fill="#e4ffb0"/></g>
+  <circle cx="256" cy="282" r="190" fill="url(#glow)"/>
+  <circle cx="256" cy="282" r="150" fill="url(#lamp)" stroke="#140c0a" stroke-width="12"/>
+  <path d="M164 334 L164 240 Q256 178 348 240 L348 334 Z" fill="#fff7eb" stroke="#140c0a" stroke-width="13" stroke-linejoin="round"/>
+  <path d="M256 200 V334" stroke="#140c0a" stroke-width="11"/>
+  <path d="M190 252 Q222 236 240 246 M190 280 Q222 264 240 274 M272 246 Q290 236 322 252 M272 274 Q290 264 322 280" stroke="#c9b39a" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <path d="M164 334 H348" stroke="#140c0a" stroke-width="13"/>
+  <path d="M186 334 Q256 392 326 334" fill="#ff3dae" stroke="#140c0a" stroke-width="11"/>
+  <circle cx="356" cy="168" r="32" fill="#3cefff" stroke="#140c0a" stroke-width="10"/>
+  <polygon points="118,368 128,392 154,394 134,410 140,436 118,422 96,436 102,410 82,394 108,392" fill="#c6ff3a" stroke="#140c0a" stroke-width="7" stroke-linejoin="round"/>
+  <text x="400" y="470" font-family="Arial Black, sans-serif" font-weight="900" font-size="78" fill="#3cefff" stroke="#140c0a" stroke-width="10" paint-order="stroke" text-anchor="middle">AI</text>
+</svg>

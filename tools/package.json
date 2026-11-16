@@ -1,0 +1,13 @@
+{
+  "name": "baza-wiedzy-ai-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build-data.mjs",
+    "build:sensitive": "node build-data.mjs --include-sensitive",
+    "eval": "node eval.mjs"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^3.8.1"
+  }
+}
