@@ -10,5 +10,5 @@ MONTHLY_BUDGET_USD = "1.00"
 # KV na licznik wydatków i limit zapytań (id uzupełnione po `wrangler kv namespace create BUDGET`)
 [[kv_namespaces]]
 binding = "BUDGET"
-id = "REPLACE_WITH_KV_ID"
-preview_id = "REPLACE_WITH_KV_ID"
+id = "deef00f5e29e4c2f9164c37aa80cadc1"
+preview_id = "deef00f5e29e4c2f9164c37aa80cadc1"
