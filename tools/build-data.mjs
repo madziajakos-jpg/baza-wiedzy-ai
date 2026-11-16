@@ -44,17 +44,20 @@ for (const c of kept) {
   });
 }
 for (const l of links) {
-  const ctx = l.context && l.context !== l.url ? l.context : '';
+  const strip = t => String(t || '').replace(/https?:\/\/\S+/gi, '').replace(/\s{2,}/g, ' ').trim();
+  const ctx = strip(l.context && l.context !== l.url ? l.context : '');
+  const title = strip(l.title);
+  const what = strip(l.what || '');
   docs.push({
-    id: l.id, k: 'l', title: l.title, summary: ctx || `Link do ${l.domain}${l.category ? ' · ' + l.category : ''}`,
-    text: [ctx, l.url, l.section ? 'Sekcja: ' + l.section : ''].filter(Boolean).join('\n'), type: 'link',
+    id: l.id, k: 'l', title, summary: ctx || (what ? what : `Strona ${l.domain}`),
+    text: [what, ctx, l.section ? 'Znaleziony w: ' + l.section : ''].filter(Boolean).join('\n'), type: 'link',
     tags: l.category ? [l.category] : [], src: l.source_file, url: l.url, section: l.section || '',
-    docUrl: l.webViewLink, domain: l.domain, also: [],
+    docUrl: l.webViewLink, domain: l.domain, what, also: [],
   });
 }
 
 const passage = d => d.k === 'l'
-  ? `passage: ${d.title}. ${d.tags.join(', ')}. ${d.summary}. ${d.section}`
+  ? `passage: ${d.title}. ${d.what ? d.what + '. ' : ''}${d.tags.join(', ')}. ${d.summary}. ${d.section}`
   : `passage: ${d.title}. ${d.section ? d.section.split(' › ').slice(-1)[0] + '. ' : ''}${d.text}`;
 
 // ---------- 3. embeddings ----------
@@ -115,6 +118,6 @@ for (const f of ['transformers.min.js', 'ort-wasm-simd-threaded.jsep.mjs', 'ort-
 
 // ---------- 7. bump service worker version (so phones fetch the new data/app) ----------
 const swPath = path.join(APP, 'sw.js');
-fs.writeFileSync(swPath, fs.readFileSync(swPath, 'utf8').replace(/const VERSION = '[^']*';/, `const VERSION = 'v1-${version}';`));
+fs.writeFileSync(swPath, fs.readFileSync(swPath, 'utf8').replace(/const VERSION = '[^']*';/, `const VERSION = 'v3-${version}';`));
 
 console.log(`OK: ${docs.length} dokumentów, emb.bin ${(buf.length / 1024).toFixed(0)} KB, wersja ${version}`);

@@ -16,6 +16,7 @@ const TYPES = {
   'lista linków': ['t-link', 'Linki'], 'link': ['t-link', 'Link'],
 };
 const typeOf = t => TYPES[t] || ['t-inne', t || 'Notatka'];
+const stripUrls = s => String(s ?? '').replace(/https?:\/\/\S+/gi, '').replace(/[ \t]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
 const ACCENTS = ['accent-magenta', 'accent-cyan', 'accent-acid'];
 export function plural(n, one, few, many) {
   if (n === 1) return one;
@@ -62,11 +63,12 @@ function cardHTML(r, n) {
   const d = r.doc, [cls, label] = typeOf(d.type);
   const isLink = d.k === 'l';
   const sel = selected.has(d.id);
+  const title = stripUrls(d.title), summary = stripUrls(d.summary), what = isLink ? stripUrls(d.what || '') : '';
   return `<article class="card ${ACCENTS[n % 3]}${selectMode ? ' selectable' : ''}${sel ? ' selected' : ''}" data-id="${esc(d.id)}" style="animation-delay:${Math.min(n, 8) * 45}ms">
     <span class="check" aria-hidden="true"></span>
-    <div class="kicker"><span class="pill ${cls}">${esc(label)}</span></div>
-    <h2>${esc(d.title)}</h2>
-    <p class="snippet">${esc(d.summary)}</p>
+    <div class="kicker"><span class="pill ${cls}">${esc(label)}</span>${what ? `<span class="what-badge">${esc(what)}</span>` : ''}</div>
+    <h2>${esc(title)}</h2>
+    <p class="snippet">${esc(summary)}</p>
     ${d.tags?.length ? `<div class="tags">${d.tags.map(t => `<span class="tag">#${esc(t)}</span>`).join('')}</div>` : ''}
     <div class="foot">
       <div class="source">${isLink ? LINK_SVG : FILE_SVG}<span>${esc(isLink ? (d.domain || '') + ' · z: ' + d.src : d.src)}</span></div>
@@ -178,7 +180,7 @@ $('#sbMerge').addEventListener('click', () => {
 
 // ---------- long-press sheet ----------
 function openSheet(doc) {
-  $('#sheetTitle').textContent = doc.title;
+  $('#sheetTitle').textContent = stripUrls(doc.title);
   const g = (ico, t, k, hint) => `<button class="sheet-act gen" data-g="${k}"><span class="ico">${ico}</span><span>${t}<small>${hint}</small></span></button>`;
   $('#sheetActions').innerHTML = `
     <button class="sheet-act main" data-s="read"><span class="ico">📖</span><span>Czytaj</span></button>
@@ -221,16 +223,17 @@ function formatText(text, q) {
 }
 function openReader(doc) {
   const [cls, label] = typeOf(doc.type), isLink = doc.k === 'l';
+  const title = stripUrls(doc.title), what = isLink ? stripUrls(doc.what || '') : '';
   $('#readerKicker').textContent = doc.src || '';
   const orig = $('#readerOrig'); orig.href = doc.url || '#'; orig.hidden = !doc.url;
   orig.textContent = isLink ? 'Otwórz link' : 'Oryginał';
   const also = (doc.also || []).filter(a => a.src);
   $('#readerBody').innerHTML = `
-    <span class="pill ${cls}" style="font-family:'Baloo 2';font-weight:700;font-size:11px;color:#fff;border-radius:99px;padding:2px 8px 1px">${esc(label)}</span>
-    <h1 id="readerTitle">${esc(doc.title)}</h1>
-    ${doc.section && doc.section.trim() !== doc.title.trim() ? `<div class="crumbs">${esc(doc.section)}</div>` : ''}
+    <span class="pill ${cls}" style="font-family:'Baloo 2';font-weight:700;font-size:11px;color:#fff;border-radius:99px;padding:2px 8px 1px">${esc(label)}</span>${what ? `<span class="what-badge">${esc(what)}</span>` : ''}
+    <h1 id="readerTitle">${esc(title)}</h1>
+    ${doc.section && doc.section.trim() !== title.trim() ? `<div class="crumbs">${esc(doc.section)}</div>` : ''}
     ${doc.tags?.length ? `<div class="tags">${doc.tags.map(t => `<span class="tag">#${esc(t)}</span>`).join('')}</div>` : ''}
-    <div class="txt">${formatText(doc.text || doc.summary || '', lastQuery)}</div>
+    <div class="txt">${formatText(stripUrls(doc.text || doc.summary || ''), lastQuery)}</div>
     <div class="src">Źródło: ${doc.url && !isLink ? `<a href="${esc(doc.url)}" target="_blank" rel="noopener">${esc(doc.src)}</a>` : esc(doc.src)}
       ${isLink && doc.docUrl ? `<br>Link znaleziony w: <a href="${esc(doc.docUrl)}" target="_blank" rel="noopener">${esc(doc.src)}</a>` : ''}
       ${also.length ? `<div class="also">To samo jest też w: ${also.map(a => a.url ? `<a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.src)}</a>` : esc(a.src)).join(', ')}</div>` : ''}

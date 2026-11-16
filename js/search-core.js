@@ -23,7 +23,7 @@ export function buildBM25(docs) {
   for (const d of docs) {
     const tf = new Map();
     const add = (txt, w) => { for (const t of tokens(txt)) tf.set(t, (tf.get(t) || 0) + w); };
-    add(d.title, 3); add((d.tags || []).join(' '), 2); add(d.summary, 1); add(d.text, 1); add(d.src, 1);
+    add(d.title, 3); add(d.what || '', 2); add((d.tags || []).join(' '), 2); add(d.summary, 1); add(d.text, 1); add(d.src, 1);
     let len = 0; for (const v of tf.values()) len += v;
     tfs.push(tf); lens.push(len);
     for (const t of tf.keys()) df.set(t, (df.get(t) || 0) + 1);

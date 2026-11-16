@@ -60,6 +60,20 @@ a { color: inherit; }
 .card .tags { display: flex; flex-wrap: wrap; gap: 4px; margin: -2px 0 8px; }
 .card .tag { font-family: "Baloo 2", sans-serif; font-weight: 600; font-size: 10.5px; line-height: 1.2; color: #5a463a; background: #f1e1c8; border-radius: 999px; padding: 2px 7px 1px; }
 .card .kicker .rel { margin-left: auto; font-family: "Patrick Hand", cursive; font-size: 12px; color: var(--muted); }
+.card .what-badge, .reader-body .what-badge {
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 700;
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  background: #e9fbff;
+  color: #143a40;
+  border: 1.5px solid var(--outline);
+  border-radius: 999px;
+  padding: 1px 7px 0;
+  line-height: 1.3;
+}
+.reader-body .what-badge { margin-left: 6px; vertical-align: middle; }
+
 .card .btn { cursor: pointer; text-decoration: none; display: inline-block; }
 .card .btn:active { transform: translate(1px,1px); box-shadow: none; }
 .pill.t-notatka { background: #c62828; } .pill.t-baza { background: #1e6b4f; } .pill.t-mysli { background: #7b3fb0; }
