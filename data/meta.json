@@ -1,10 +1,10 @@
 {
- "version": "202611171918",
+ "version": "202611191920",
  "model": "Xenova/multilingual-e5-small",
  "dim": 384,
- "count": 724,
- "chunks": 630,
- "links": 94,
+ "count": 533,
+ "chunks": 455,
+ "links": 78,
  "includeSensitive": false,
  "queryPrefix": "query: "
 }
